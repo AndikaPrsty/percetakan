@@ -22,7 +22,7 @@ class Gambar extends Model
     protected $validationRules    = [
         'id' => 'required',
         'id_produk' => 'required',
-        'gambar' => 'requried',
+        'gambar' => 'required',
     ];
     protected $validationMessages = [
         'id' => [

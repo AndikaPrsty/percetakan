@@ -23,8 +23,8 @@ class Ukuran extends Model
         'id' => 'required',
         'id_produk' => 'required',
         'id_kategori' => 'required',
-        'nama_produk' => 'required|min_length[3]',
-        'ukuran' => 'requried',
+        'nama_ukuran' => 'required|min_length[3]',
+        'ukuran' => 'required',
     ];
     protected $validationMessages = [
         'id' => [

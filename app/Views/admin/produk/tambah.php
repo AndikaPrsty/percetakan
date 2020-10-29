@@ -36,12 +36,13 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="nama_produk">Nama Produk</label>
-                                    <input type="text" id="nama_produk" name="nama_produk" class="form-control"
-                                        id="nama_produk">
+                                    <input type="text" id="nama_produk" name="nama_produk"
+                                        class="form-control form-produk" id="nama_produk">
                                 </div>
                                 <div class="form-group">
                                     <label for="id_kategori">Kategori</label>
-                                    <select class="form-control" id="id_kategori" name="id_kategori" id="id_kategori">
+                                    <select class="form-control form-produk" id="id_kategori" name="id_kategori"
+                                        id="id_kategori">
                                     </select>
                                 </div>
                                 <div class="row">
@@ -67,14 +68,14 @@
                                             <div class="form-group">
                                                 <label>Nama Ukuran</label>
                                                 <input type="text" required="true" name="nama_ukuran"
-                                                    class="form-control nama_ukuran">
+                                                    class="form-control nama_ukuran form-produk">
                                             </div>
                                         </div>
                                         <div class="col-3">
                                             <div class="form-group">
                                                 <label>Ukuran</label>
                                                 <input type="text" required="true" name="ukuran"
-                                                    class="form-control ukuran">
+                                                    class="form-control ukuran form-produk">
                                             </div>
 
                                         </div>
@@ -82,7 +83,8 @@
                                             <div class="form-group">
                                                 <label>Harga (Rp)</label>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control harga">
+                                                    <input type="text" name="harga"
+                                                        class="form-control harga form-produk">
                                                     <span class="input-group-append">
                                                         <button type="button" id="tambah-ukuran"
                                                             class="btn btn-success btn-flat"><i

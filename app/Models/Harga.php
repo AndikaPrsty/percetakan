@@ -23,7 +23,7 @@ class Harga extends Model
         'id' => 'required',
         'id_produk' => 'required',
         'id_ukuran' => 'required',
-        'harga' => 'requried',
+        'harga' => 'required',
     ];
     protected $validationMessages = [
         'id' => [
@@ -37,7 +37,7 @@ class Harga extends Model
             'required' => 'ID Ukuran Tidak Boleh Kosong'
         ],
         'harga' => [
-            'required' => 'Gambar Harus DIisi'
+            'required' => 'Harga Harus DIisi'
         ]
     ];
     protected $skipValidation     = false;

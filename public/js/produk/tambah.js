@@ -1,3 +1,4 @@
+let form = document.getElementById('form')
 let formUkuran = document.getElementById('form-ukuran')
 let formUkuranBaru
 let kategoriInput = document.getElementById('id_kategori')
@@ -13,7 +14,12 @@ let ukuran = document.querySelectorAll('.ukuran')
 let nomor = 0
 let kategori
 let images = []
-let produk
+let produk = {
+    nama_produk: null,
+    id_kategori: null,
+    ukuran: [],
+    harga: []
+}
 
 const fetchKategori = async () => {
     let res = await fetch(`${window.location.origin}/api/kategori`)
@@ -92,6 +98,13 @@ const tambahGambar = () => {
 
 }
 
+const showLoading = () => {
+    Swal.fire({
+        allowOutsideClick: false
+    })
+    Swal.showLoading()
+}
+
 const tampilGambar = (id) => {
     const reader = new FileReader()
     reader.onload = async (e) => {
@@ -122,6 +135,102 @@ const hapusGambar = (id) => {
     images.length === 0 ? document.getElementById('img-form').style.display = 'none' : null
 }
 
+const clearInput = () => {
+    let inputs = document.getElementsByTagName('input')
+    inputs = [].slice.call(inputs)
+    inputs.forEach(input => {
+        input.value = ''
+    })
+}
+
+const clearError = () => {
+    let inputs = form.getElementsByClassName('form-produk')
+    inputs = [].slice.call(inputs)
+    inputs.forEach(input=> {
+        input.classList.remove('is-invalid')
+        input.classList.remove('is-valid')
+    })
+}
+
+
+const formValid = (cond = true, errors = null) => {
+    let inputs = form.getElementsByClassName('form-produk')
+    inputs = [].slice.call(inputs)
+    cond ? (
+            inputs.forEach(input => {
+                input.classList.add('is-valid')
+            })
+        ) : (
+            inputs.forEach(input => {
+                input.classList.add('is-invalid')
+            })
+        )
+        !cond ? inputs.forEach(input => input.classList.add('is-invalid')) : null
+    inputs.forEach(input => {
+        input.addEventListener('keyup',() => {
+            clearError()
+        })
+    })
+}
+
+const responseAlert = (msg, cond = false) => {
+    let message
+    cond ? message = msg : message = Object.values(msg.errors).join(' | ')
+    Swal.fire({
+        icon: cond ? 'success' : 'error',
+        title: cond ? 'Success' : 'Oops...',
+        text: message
+    })
+
+    cond ? clearInput() : null
+    cond ? formValid(true) : formValid(false, msg.errors)
+
+}
+
+const sendProduk = async () => {
+    produk.nama_produk = nama_produk.value
+    produk.id_kategori = id_kategori.value
+    produk.ukuran = []
+    produk.harga = []
+    ukuran.forEach((uk, i) => {
+        produk.ukuran.push({
+            nama_ukuran: nama_ukuran[i].value,
+            ukuran: uk.value,
+            harga: harga[i].value
+        })
+        produk.harga.push({
+            harga: harga[i].value
+        })
+    })
+    let produkData = JSON.stringify(produk)
+    let res = await fetch(`${window.location.origin}/api/produk/create`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: produkData
+    })
+    res = await res.json()
+    res.isValid ? responseAlert(`Berhasil Menambahkan Produk ${res.nama_produk}`, true) : responseAlert(res, false)
+    res.isValid ? sendGambar(res.id) : null
+
+}
+
+const sendGambar = async (id) => {
+    let formData = new FormData
+    images.forEach(async img => {
+        formData.append('id_produk',id)
+        formData.append('image',img)
+
+      let res =  await fetch(`${window.location.origin}/api/produk/upload`,{
+            method:"POST",
+            body:formData
+        })
+        res = await res.json()
+        console.log(res)
+    })
+}
+
 tombolTambahUkuran.addEventListener('click', () => {
     tambahFormUkuran()
     nomor++
@@ -145,5 +254,6 @@ tombolTambahGambar.addEventListener('click', async () => {
 
 submit.addEventListener('click', (e) => {
     e.preventDefault()
+    showLoading()
     sendProduk()
 })

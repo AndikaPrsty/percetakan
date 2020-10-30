@@ -6,6 +6,7 @@ let tombolTambahUkuran = document.getElementById('tambah-ukuran')
 let tombolHapusUkuran = document.querySelectorAll('.btn-hapus-ukuran')
 let tombolTambahGambar = document.getElementById('btn-img')
 let submit = document.getElementById('submit')
+let reset = document.getElementById('btn-back')
 let nama_produk = document.getElementById('nama_produk')
 let id_kategori = document.getElementById('id_kategori')
 let harga = document.querySelectorAll('.harga')
@@ -184,6 +185,7 @@ const responseAlert = (msg, cond = false) => {
 
     cond ? clearInput() : null
     cond ? formValid(true) : formValid(false, msg.errors)
+    disableAllInput(false)
 
 }
 
@@ -211,13 +213,31 @@ const sendProduk = async () => {
         body: produkData
     })
     res = await res.json()
+    console.log(res)
     res.isValid ? responseAlert(`Berhasil Menambahkan Produk ${res.nama_produk}`, true) : responseAlert(res, false)
     res.isValid ? sendGambar(res.id) : null
 
 }
 
+const disableAllInput = (cond) => {
+    let inputs = document.getElementsByClassName('form-produk')
+    inputs = [].slice.call(inputs)
+    inputs.forEach(input => {
+        cond ? input.disabled = true : input.disabled = false
+    })
+}
+
 const sendGambar = async (id) => {
     let formData = new FormData
+    if (images.length === 0) {
+        formData.append('dummy_image', 'ProdukDefault.jpg')
+        formData.append('id_produk', id)
+        let res = await fetch(`${window.location.origin}/api/produk/upload`,{
+            method:'POST',
+            body:formData
+        })
+        res = await res.json()
+    }
     images.forEach(async img => {
         formData.append('id_produk',id)
         formData.append('image',img)
@@ -226,8 +246,6 @@ const sendGambar = async (id) => {
             method:"POST",
             body:formData
         })
-        res = await res.json()
-        console.log(res)
     })
 }
 
@@ -247,13 +265,18 @@ tombolTambahGambar.addEventListener('click', async () => {
             'aria-label': 'Upload your profile picture'
         }
     })
-    file.id = Date.now()
+    file ? file.id = Date.now() : null
     file ? images.push(file) : null
     tambahGambar()
 })
 
 submit.addEventListener('click', (e) => {
     e.preventDefault()
+    disableAllInput(true)
     showLoading()
     sendProduk()
+})
+
+reset.addEventListener('click',() => {
+    window.location.replace(`${window.location.origin}/admin/produk`)
 })

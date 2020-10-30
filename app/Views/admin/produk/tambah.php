@@ -102,7 +102,8 @@
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer">
-                                <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" id="submit" class="btn btn-primary form-produk">Submit</button>
+                                <button type="reset" id="btn-back" class="btn btn-danger  form-produk">Kembali</button>
                             </div>
                         </form>
                     </div>

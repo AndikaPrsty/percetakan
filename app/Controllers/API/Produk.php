@@ -11,7 +11,9 @@ class Produk extends ResourceController
 
     public function index()
     {
-        return $this->respond(['data' => 'andika']);
+        $id = $this->request->getGet('id');
+        $id ?  $data = $this->model->getProduk($id) : $data = $this->model->getProduk();
+        return $this->respond($data);
     }
     public function create()
     {
@@ -62,7 +64,7 @@ class Produk extends ResourceController
         $uuid = service('uuid')->uuid4()->toString();
         $file = $this->request->getFile('image');
         $file ? $fileName = $this->request->getFile('image')->getRandomName() : $fileName = $this->request->getPost('dummy_image');
-        $file->move(ROOTPATH . '\public\image\produk', $fileName);
+        $file ? $file->move(ROOTPATH . '\public\image\produk', $fileName) : null;
         $data = [
             'id' => $uuid,
             'gambar' => $fileName,

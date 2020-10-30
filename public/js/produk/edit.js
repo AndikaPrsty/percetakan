@@ -1,6 +1,12 @@
 let produk, kategori, ukuran, harga, image
 let baseURL = window.location.origin
-let updatedProduk
+let updatedProduk = {
+    id_produk : null,
+    nama_produk: null,
+    id_kategori: null,
+    ukuran: [],
+    harga: []
+}
 let btnPreview
 let newImages = []
 let produkEdit = document.getElementById('edit-produk')
@@ -10,12 +16,13 @@ const formUkuran = document.getElementById('form-ukuran')
 const imageContainer = document.getElementById('gambar-container')
 const backButton = document.getElementById('btn-back')
 const delButton = document.getElementById('btn-del')
+const submit = document.getElementById('submit')
 const addImageButton = document.getElementById('btn-img')
 let nama_produkLama = document.getElementById('nama_produk')
 let id_kategoriLama = document.getElementById('id_kategori')
-let hargaLama = document.querySelectorAll('.harga')
-let nama_ukuranLama = document.querySelectorAll('.nama_ukuran')
-let ukuranLama = document.querySelectorAll('.ukuran')
+let hargaLama
+let nama_ukuranLama
+let ukuranLama
 let editMode
 
 const showLoading = () => {
@@ -36,7 +43,7 @@ const fetchProduk = async () => {
     produk = res.produk
     kategori = res.kategori
     ukuran = res.ukuran
-    ukuran = res.ukuran
+    harga = res.harga
     image = res.gambar
     setKategori()
     setProdukLama()
@@ -68,6 +75,21 @@ const alertSuccess = async (msg, cond = true, opt = false, red = false) => {
     })
     opt ? fetchProduk() : null
     red ? window.location.replace(`${baseURL}/admin/produk`) : null
+}
+
+const responseAlert = (msg, cond = false) => {
+    let message
+    cond ? message = msg : message = Object.values(msg.errors).join(' | ')
+    Swal.fire({
+        icon: cond ? 'success' : 'error',
+        title: cond ? 'Success' : 'Oops...',
+        text: message
+    })
+
+    cond ? clearInput() : null
+    cond ? formValid(true) : formValid(false, msg.errors)
+    disableAllInput(false)
+
 }
 
 const deleteImage = async (id) => {
@@ -156,14 +178,15 @@ const setProdukLama = () => {
 
 const setUkuranLama = () => {
     formUkuran.innerHTML = null
-    ukuran.forEach(ukuran => {
+    ukuran.forEach((ukuran,i) => {
+        console.log(ukuran)
         let div = document.createElement('div')
         div.classList.add('row')
         div.innerHTML = `
         <div class="col-4">
             <div class="form-group">
                 <label>Nama Ukuran</label>
-                <input type="text" required="true" value="${ukuran.nama_ukuran}" name="nama_ukuran"
+                <input type="text" data-id="${ukuran.id}" required="true" value="${ukuran.nama_ukuran}" name="nama_ukuran"
                     class="form-control nama_ukuran old-ukuran form-produk">
             </div>
         </div>
@@ -179,13 +202,16 @@ const setUkuranLama = () => {
             <div class="form-group">
                 <label>Harga (Rp)</label>
                 <div class="input-group">
-                    <input type="text" value="${ukuran.harga}" name="harga"
+                    <input type="text" data-id="${harga[i].id}" value="${ukuran.harga}" name="harga"
                         class="form-control harga form-produk old-ukuran">
                 </div>
             </div>
         </div>`
-
         formUkuran.append(div)
+
+        nama_ukuranLama = document.querySelectorAll('.nama_ukuran')
+        ukuranLama = document.querySelectorAll('.ukuran')
+        hargaLama = document.querySelectorAll('.harga')
     })
 
 }
@@ -233,20 +259,26 @@ const hapusGambar = (id) => {
 }
 
 const updateProduk = async () => {
+    showLoading()
     updatedProduk.nama_produk = nama_produkLama.value
     updatedProduk.id_kategori = id_kategoriLama.value
+    updatedProduk.id_produk = produk.id
     updatedProduk.ukuran = []
     updatedProduk.harga = []
     ukuranLama.forEach((uk, i) => {
         updatedProduk.ukuran.push({
+            id:nama_ukuranLama[i].dataset.id,
             nama_ukuran: nama_ukuranLama[i].value,
             ukuran: uk.value,
+            id_kategori:id_kategoriLama.value,
             harga: hargaLama[i].value
         })
         updatedProduk.harga.push({
+            id:hargaLama[i].dataset.id,
             harga: hargaLama[i].value
         })
     })
+    console.log(updatedProduk)
     let produkData = JSON.stringify(updatedProduk)
     let res = await fetch(`${window.location.origin}/api/produk/update`, {
         method: "POST",
@@ -257,8 +289,8 @@ const updateProduk = async () => {
     })
     res = await res.json()
     console.log(res)
-    res.isValid ? responseAlert(`Berhasil Update Produk ${res.nama_produk}`, true) : responseAlert(res, false)
-    res.isValid ? sendGambar(res.id) : null
+    res.isValid ? alertSuccess('Berhasil memperbarui data produk',res.isValid,true,false) : responseAlert(res.errors,res.isValid)
+    // res.isValid ? sendGambar(res.id) : null
 
 }
 
@@ -304,4 +336,8 @@ addImageButton.addEventListener('click', async () => {
     file ? file.id = Date.now() : null
     file ? newImages.push(file) : null
     tambahGambar()
+})
+
+submit.addEventListener('click', () => {
+    updateProduk()
 })

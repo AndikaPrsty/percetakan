@@ -23,6 +23,31 @@ class Produk extends ResourceController
         $ukuran = new \App\Models\Ukuran;
         $harga = new \App\Models\Harga;
 
+        $produkValidation = [
+            'id' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'ID Tidak Boleh Kosong'
+                ]
+            ],
+            'nama_produk' => [
+                'rules' => 'required|min_length[4]|is_unique[produk.nama_produk]',
+                'errors' => [
+                    'required' => 'Nama Produk Harus Diisi',
+                    'min_length' => 'Nama Produk Terlalu Pendek',
+                    'is_unique' => 'Produk Yang anda input sudah tersedia di database'
+                ],
+            ],
+            'id_kategori' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'ID Kategori Tidak Boleh Kosong'
+                ]
+            ]
+        ];
+
+        $this->model->setValidationRules($produkValidation);
+
         $this->model->insert($data);
         foreach ($data['ukuran'] as $uk) {
             $idUkuran = service('uuid')->uuid4()->toString();
@@ -130,6 +155,67 @@ class Produk extends ResourceController
                 'msg' => 'data gagal dihapus',
                 'isDeleted' => false
             ];
+            return $this->respond($data);
+        }
+    }
+
+    public function update($id = null)
+    {
+        $ukuran = new \App\Models\Ukuran;
+        $harga = new \App\Models\Harga;
+
+        $data = $this->request->getJSON(true);
+
+        $id_produk = $data['id_produk'];
+
+        $dataProduk = [
+            'nama_produk' => $data['nama_produk'],
+            'id_kategori' => $data['id_kategori']
+        ];
+        $namaProduk = $dataProduk['nama_produk'];
+        $dataUkuran = $data['ukuran'];
+        $dataHarga = $data['harga'];
+
+
+        $produkValidation = [
+            'id' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'ID Tidak Boleh Kosong'
+                ]
+            ],
+            'nama_produk' => [
+                'rules' => 'required|min_length[4]',
+                'errors' => [
+                    'required' => 'Nama Produk Harus Diisi',
+                    'min_length' => 'Nama Produk Terlalu Pendek',
+                    'is_unique' => 'Produk Yang anda input sudah tersedia di database'
+                ],
+            ],
+            'id_kategori' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'ID Kategori Tidak Boleh Kosong'
+                ]
+            ]
+        ];
+
+        $this->model->setValidationRules($produkValidation);
+        $this->model->update($id_produk, $dataProduk);
+        for ($i = 0; $i < count($data['ukuran']); $i++) {
+            !$this->model->errors() ?  $ukuran->update($dataUkuran[$i]['id'], $dataUkuran[$i]) : null;
+            !$this->model->errors() ? $harga->update($dataHarga[$i]['id'], $dataHarga[$i]) : null;
+        }
+        if (!$this->model->errors() && !$ukuran->errors() && !$harga->errors()) {
+            $data['isValid'] = true;
+            return $this->respond($data);
+        } else {
+            $data['isValid'] = false;
+            $data['errors'] = [];
+            $this->model->errors() ? $data['errors'] += $this->model->errors() : null;
+            $harga->errors() ? $data['errors'] += $harga->errors() : null;
+            $ukuran->errors() ? $data['errors'] += $ukuran->errors() : null;
+
             return $this->respond($data);
         }
     }

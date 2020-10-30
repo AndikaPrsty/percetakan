@@ -62,7 +62,7 @@
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-                            <button class="btn btn-primary float-right">tambah produk</button>
+                            <button id="tambah_produk" class="btn btn-primary float-right">tambah produk</button>
                         </div>
                     </div>
                 </div>

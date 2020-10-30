@@ -3,6 +3,7 @@ let table = document.getElementById('table-produk')
 let tableBody = table.getElementsByTagName('tbody')
 let tableFilter = document.getElementById('table-filter')
 let filterSelect = document.getElementById('filter-select')
+let tambahProduk = document.getElementById('tambah_produk')
 let produk
 let kategori
 let nomor = 1
@@ -27,9 +28,9 @@ const fetchKategori = async () => {
 fetchProduk()
 
 const setProduk = () => {
-    let tr = document.createElement('tr')
-    let content =''
     produk.forEach(produk => {
+        let content =''
+        let tr = document.createElement('tr')
         content += `<td>${nomor}</td>
         <td>${produk.nama_produk}</td>
         <td>${produk.nama_kategori}</td>
@@ -37,10 +38,10 @@ const setProduk = () => {
         <td><a href="${baseURL}/admin/produk/edit?id=${produk.id}" class="btn btn-info"><i class="fas fa-eye mr-1"></i>Detail</a>
         </td>`
         nomor++
+        tr.innerHTML = content
+        let tableBodyArray =  [].slice.call(tableBody)
+        tableBodyArray[0].append(tr)
     })
-    tr.innerHTML = content
-    let tableBodyArray =  [].slice.call(tableBody)
-    tableBodyArray[0].append(tr)
 }
 
 const setKategori = () => {
@@ -88,4 +89,7 @@ filterSelect.addEventListener('change', (e) => {
             }
         }
     })
+})
+tambahProduk.addEventListener('click',() => {
+    window.location.replace(`${baseURL}/admin/produk/tambah`)
 })

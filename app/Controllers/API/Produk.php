@@ -77,7 +77,6 @@ class Produk extends ResourceController
     }
     public function delete_image()
     {
-        helper('filesystem');
         $id = $this->request->getGet('id_image');
         $gambar = new \App\Models\Gambar;
         $fileName = $gambar->where('id', $id)->get()->getResult()[0]->gambar;
@@ -88,6 +87,7 @@ class Produk extends ResourceController
             ];
             return $this->respond($data);
         } else {
+            unlink(FCPATH . './image/produk/' . $fileName);
             $gambar->where('id', $id)->delete();
             if (count($gambar->where('id', $id)->get()->getResult()) === 0) {
                 $data = [
@@ -104,5 +104,40 @@ class Produk extends ResourceController
                 return $this->respond($data);
             }
         }
+    }
+    public function delete($id = null)
+    {
+        $ukuran = new \App\Models\Ukuran;
+        $harga = new \App\Models\Harga;
+        $gambar = new \App\Models\Gambar;
+
+        $id = $this->request->getGet('id');
+        $deleteGambar = $gambar->where('id_produk', $id)->get()->getResult();
+        foreach ($deleteGambar as $gmbr) {
+            unlink(FCPATH . './image/produk/' . $gmbr->gambar);
+        }
+        if ($this->model->delete($id)) {
+            $ukuran->where('id_produk', $id)->delete();
+            $harga->where('id_produk', $id)->delete();
+            $gambar->where('id_produk', $id)->delete();
+            $data = [
+                'msg' => 'data berhasil dihapus',
+                'isDeleted' => true
+            ];
+            return $this->respond($data);
+        } else {
+            $data = [
+                'msg' => 'data gagal dihapus',
+                'isDeleted' => false
+            ];
+            return $this->respond($data);
+        }
+    }
+
+    public function test()
+    {
+        $gambar = new \App\Models\Gambar;
+        $data = $gambar->get()->getResult();
+        return $this->respond($data);
     }
 }

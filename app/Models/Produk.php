@@ -47,6 +47,12 @@ class Produk extends Model
         $harga = new \App\Models\Harga;
 
         if ($id) {
+            if (count($produk->where('id', $id)->get()->getResult()) === 0) {
+                return $data = [
+                    'msg' => 'Data Produk Tidak Ditemukan',
+                    'isValid' => false
+                ];
+            }
             $data = [];
             $data['produk'] = $produk->where('id', $id)->get()->getResultArray()[0];
             $data['kategori'] = $kategori->get()->getResultArray();
@@ -63,6 +69,8 @@ class Produk extends Model
             $data['gambar'] = $gambar->where('id_produk', $id)
                 ->get()
                 ->getResultArray();
+
+            $data['isValid'] = true;
 
             return $data;
         } else {

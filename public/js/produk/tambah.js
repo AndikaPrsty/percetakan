@@ -213,9 +213,10 @@ const sendProduk = async () => {
         body: produkData
     })
     res = await res.json()
-    console.log(res)
     res.isValid ? responseAlert(`Berhasil Menambahkan Produk ${res.nama_produk}`, true) : responseAlert(res, false)
     res.isValid ? sendGambar(res.id) : null
+    res.isValid ?  images = [] : null
+    res.isValid ? tambahGambar() : null
 
 }
 
@@ -247,6 +248,9 @@ const sendGambar = async (id) => {
             body:formData
         })
     })
+    images = null
+    let imageContainer = document.getElementById('img-container')
+    imageContainer.innerHTML = null
 }
 
 tombolTambahUkuran.addEventListener('click', () => {

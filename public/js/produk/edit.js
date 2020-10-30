@@ -1,6 +1,8 @@
 let produk, kategori, ukuran, harga, image
 let baseURL = window.location.origin
+let updatedProduk
 let btnPreview
+let newImages = []
 let produkEdit = document.getElementById('edit-produk')
 const urlParams = new URLSearchParams(window.location.search);
 const id_produk = urlParams.get('id');
@@ -8,16 +10,29 @@ const formUkuran = document.getElementById('form-ukuran')
 const imageContainer = document.getElementById('gambar-container')
 const backButton = document.getElementById('btn-back')
 const delButton = document.getElementById('btn-del')
+const addImageButton = document.getElementById('btn-img')
+let nama_produkLama = document.getElementById('nama_produk')
+let id_kategoriLama = document.getElementById('id_kategori')
+let hargaLama = document.querySelectorAll('.harga')
+let nama_ukuranLama = document.querySelectorAll('.nama_ukuran')
+let ukuranLama = document.querySelectorAll('.ukuran')
 let editMode
 
+const showLoading = () => {
+    Swal.fire({
+        allowOutsideClick: false
+    })
+    Swal.showLoading()
+}
 
 const fetchProduk = async () => {
     delButton.disabled = false
     produkEdit.disabled = false
-    editMode ? Swal.showLoading() : null
+    editMode ? showLoading() : null
     backButton.innerText = 'Kembali'
     let res = await fetch(`${baseURL}/api/produk?id=${id_produk}`)
     res = await res.json()
+    res.isValid ? null : alertSuccess(res.msg, false, false, true)
     produk = res.produk
     kategori = res.kategori
     ukuran = res.ukuran
@@ -34,19 +49,33 @@ const fetchProduk = async () => {
     Swal.close()
 }
 
-const alertConfirmation = async (msg,color,func) => {
+const alertConfirmation = async (msg, color) => {
     let res = await Swal.fire({
         title: msg,
         showCancelButton: true,
-        confirmButtonText: 'Konfirmasi' ,
-        cancelButtonText:'Batal',
+        confirmButtonText: 'Konfirmasi',
+        cancelButtonText: 'Batal',
         confirmButtonColor: color ? color : 'red'
     })
-    res.value ? func() : alert('batal')
+    return res
 }
 
-const deleteImage = async () => {
-    let res = await fetch(`${baseURL}/api/produk`)
+const alertSuccess = async (msg, cond = true, opt = false, red = false) => {
+    await Swal.fire({
+        icon: cond ? 'success' : 'error',
+        title: cond ? 'Berhasil' : 'Oops...',
+        text: msg,
+    })
+    opt ? fetchProduk() : null
+    red ? window.location.replace(`${baseURL}/admin/produk`) : null
+}
+
+const deleteImage = async (id) => {
+    showLoading()
+    let res = await fetch(`${baseURL}/api/produk/delete_image?id_image=${id}`)
+    res = await res.json()
+    console.log(res)
+    res.isDeleted ? alertSuccess(res.msg, true) : alertSuccess(res.msg, false)
 }
 
 const previewGambar = async (id) => {
@@ -62,6 +91,7 @@ const previewGambar = async (id) => {
 
 const setGambar = () => {
     let content = ''
+    imageContainer.innerHTML = null
     image.forEach(img => {
         content += `<tr>
         <td>${img.gambar}</td>
@@ -69,13 +99,19 @@ const setGambar = () => {
             <div class="btn-group btn-group-sm">
                 <button onClick="previewGambar('${img.id}')" class="btn btn-preview btn-info mr-1"><i
                         class="fas fa-eye"></i></button>
-                <button class="btn btn-danger img-del"><i
+                <button onClick="getImageId('${img.id}')" data-id=${img.id} class="btn btn-danger img-del"><i
                         class="fas fa-trash"></i></button>
             </div>
         </td>`
     })
     imageContainer.innerHTML = content
+    image.length === 0 ? imageContainer.innerHTML = `<tr><td class="text-dark bg-secondary" style="text-align: center;" colspan="2">klik edit untuk menambah gambar</td></tr>` : null
     showImgDelete(false)
+}
+
+const getImageId = async (id) => {
+    let res = await alertConfirmation('Apakah Anda Yakin Ingin Menghapus Gambar Ini ?', 'red')
+    res.value ? deleteImage(id) : null
 }
 
 const showImgDelete = (cond = true) => {
@@ -154,6 +190,85 @@ const setUkuranLama = () => {
 
 }
 
+const tambahGambar = () => {
+    if (newImages.length !== 0) {
+        document.getElementById('img-form').style.display = ''
+        let imageContainer = document.getElementById('img-container')
+        let content = ''
+        newImages.forEach((img) => {
+            content += `<span class="badge badge-secondary mr-1" id="img-${img.id}" onClick="tampilGambar(${img.id})" style="cursor:pointer;">${img.name}</span>`
+        })
+        imageContainer.innerHTML = content
+    }
+
+}
+
+const tampilGambar = (id) => {
+    const reader = new FileReader()
+    reader.onload = async (e) => {
+        let res = await Swal.fire({
+            title: 'Gambar yang akan diupload',
+            imageHeight: 420,
+            showCancelButton: true,
+            confirmButtonColor: 'red',
+            confirmButtonText: `Hapus`,
+            imageUrl: e.target.result,
+            imageAlt: 'The uploaded picture'
+        })
+        res.value ? hapusGambar(id) : null
+    }
+    let image = newImages.filter(img => {
+        return img.id === id
+    })
+    reader.readAsDataURL(image[0])
+}
+
+const hapusGambar = (id) => {
+    let gambar = document.getElementById(`img-${id}`)
+    gambar.remove()
+    newImages = newImages.filter(img => {
+        return img.id !== id
+    })
+    newImages.length === 0 ? document.getElementById('img-form').style.display = 'none' : null
+}
+
+const updateProduk = async () => {
+    updatedProduk.nama_produk = nama_produkLama.value
+    updatedProduk.id_kategori = id_kategoriLama.value
+    updatedProduk.ukuran = []
+    updatedProduk.harga = []
+    ukuranLama.forEach((uk, i) => {
+        updatedProduk.ukuran.push({
+            nama_ukuran: nama_ukuranLama[i].value,
+            ukuran: uk.value,
+            harga: hargaLama[i].value
+        })
+        updatedProduk.harga.push({
+            harga: hargaLama[i].value
+        })
+    })
+    let produkData = JSON.stringify(updatedProduk)
+    let res = await fetch(`${window.location.origin}/api/produk/update`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: produkData
+    })
+    res = await res.json()
+    console.log(res)
+    res.isValid ? responseAlert(`Berhasil Update Produk ${res.nama_produk}`, true) : responseAlert(res, false)
+    res.isValid ? sendGambar(res.id) : null
+
+}
+
+const deleteProduk = async () => {
+    showLoading()
+    let res = await fetch(`${baseURL}/api/produk/delete?id=${id_produk}`)
+    res = await res.json()
+    res.isDeleted ? alertSuccess(res.msg, res.isDeleted, false, true) : alertSuccess(res.msg, false, true, false)
+}
+
 fetchProduk()
 
 produkEdit.addEventListener('click', (e) => {
@@ -168,4 +283,25 @@ produkEdit.addEventListener('click', (e) => {
 
 backButton.addEventListener('click', () => {
     !editMode ? window.location.replace(`${baseURL}/admin/produk`) : fetchProduk()
+})
+
+delButton.addEventListener('click', async () => {
+    let res = await alertConfirmation('Apakah Anda Yakin Ingin Menghapus Produk Ini?')
+    res.value ? deleteProduk() : null
+})
+
+addImageButton.addEventListener('click', async () => {
+    const {
+        value: file
+    } = await Swal.fire({
+        title: 'Select image',
+        input: 'file',
+        inputAttributes: {
+            'accept': 'image/*',
+            'aria-label': 'Upload your profile picture'
+        }
+    })
+    file ? file.id = Date.now() : null
+    file ? newImages.push(file) : null
+    tambahGambar()
 })

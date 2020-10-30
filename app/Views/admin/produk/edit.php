@@ -30,7 +30,12 @@
                         <div class="card-header">
                             <h3 class="card-title">Detail Produk</h3>
                             <div class="card-tools">
-                                <button class="btn btn-warning"><i class="far fa-edit mr-1"></i>Edit</button>
+                                <div class="input-group">
+                                    <button class="btn btn-danger mr-1" id="btn-del"><i class="far fa-trash-alt"> Hapus
+                                        </i></button>
+                                    <button id="edit-produk" class="btn btn-warning"><i
+                                            class="far fa-edit mr-1"></i>Edit</button>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -47,22 +52,6 @@
                                             <select class="form-control form-produk old-produk" id="id_kategori"
                                                 name="id_kategori" id="id_kategori">
                                             </select>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <div class="form-group">
-                                                    <label>Gambar</label>
-                                                    <button type="button" id="btn-img" class="btn btn-primary ">Tambah
-                                                        Gambar</button>
-                                                </div>
-                                            </div>
-                                            <div class="col" id="img-form" style="display: none;">
-                                                <div class="form-group">
-                                                    <label for="">Gambar yang akan diupload:</label>
-                                                    <div id="img-container">
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div id="form-ukuran">
 
@@ -82,32 +71,36 @@
                                                         <th></th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-
-                                                    <tr>
-                                                        <td>Functional-requirements.docx</td>
-                                                        <td class="text-right py-0 align-middle">
-                                                            <div class="btn-group btn-group-sm">
-                                                                <a href="#" class="btn btn-info mr-1"><i
-                                                                        class="fas fa-eye"></i></a>
-                                                                <a href="#" class="btn btn-danger"><i
-                                                                        class="fas fa-trash"></i></a>
-                                                            </div>
-                                                        </td>
+                                                <tbody id="gambar-container">
                                                 </tbody>
                                             </table>
                                         </div>
                                         <!-- /.card-body -->
                                     </div>
                                     <!-- /.card -->
+                                    <div id="img-add" class="row btn-edit" style="display: none;">
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <button type="button" id="btn-img" class="btn btn-primary">Tambah
+                                                    Gambar</button>
+                                            </div>
+                                        </div>
+                                        <div class="col" id="img-form" style="display: none;">
+                                            <div class="form-group">
+                                                <label for="">Gambar yang akan diupload:</label>
+                                                <div id="img-container">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="card-footer">
-                            <button type="submit" id="submit" style="display: none;"
-                                class="btn btn-primary form-produk-btn">Submit</button>
                             <button type="reset" id="btn-back" class="btn btn-danger form-produk-btn">Kembali</button>
+                            <button type="submit" id="submit" style="display: none;"
+                                class="btn btn-success form-produk-btn float-right btn-edit">Simpan Perubahan</button>
                         </div>
                     </div>
                     <!-- /.card -->

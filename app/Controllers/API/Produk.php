@@ -161,18 +161,15 @@ class Produk extends ResourceController
 
     public function update($id = null)
     {
+        $data = $this->request->getJSON(true);
         $ukuran = new \App\Models\Ukuran;
         $harga = new \App\Models\Harga;
-
-        $data = $this->request->getJSON(true);
-
         $id_produk = $data['id_produk'];
 
         $dataProduk = [
             'nama_produk' => $data['nama_produk'],
             'id_kategori' => $data['id_kategori']
         ];
-        $namaProduk = $dataProduk['nama_produk'];
         $dataUkuran = $data['ukuran'];
         $dataHarga = $data['harga'];
 
@@ -203,8 +200,8 @@ class Produk extends ResourceController
         $this->model->setValidationRules($produkValidation);
         $this->model->update($id_produk, $dataProduk);
         for ($i = 0; $i < count($data['ukuran']); $i++) {
-            !$this->model->errors() ?  $ukuran->update($dataUkuran[$i]['id'], $dataUkuran[$i]) : null;
-            !$this->model->errors() ? $harga->update($dataHarga[$i]['id'], $dataHarga[$i]) : null;
+            $ukuran->update($dataUkuran[$i]['id'], $dataUkuran[$i]);
+            $harga->update($dataHarga[$i]['id'], $dataHarga[$i]);
         }
         if (!$this->model->errors() && !$ukuran->errors() && !$harga->errors()) {
             $data['isValid'] = true;
@@ -213,6 +210,45 @@ class Produk extends ResourceController
             $data['isValid'] = false;
             $data['errors'] = [];
             $this->model->errors() ? $data['errors'] += $this->model->errors() : null;
+            $harga->errors() ?  $data['errors'] += $harga->errors() : false;
+            $ukuran->errors() ? $data['errors'] += $ukuran->errors() : false;
+
+            return $this->respond($data);
+        }
+        return $this->respond($data);
+    }
+
+    public function ukuran_harga()
+    {
+        $data = $this->request->getJSON(true);
+        $ukuran = new \App\Models\Ukuran;
+        $harga = new \App\Models\Harga;
+        $id_produk = $data['id_produk'];
+
+        foreach ($data['ukuran'] as $uk) {
+            $idUkuran = service('uuid')->uuid4()->toString();
+            $dataUkuran = [
+                'id' => $idUkuran,
+                'id_produk' => $id_produk,
+                'nama_ukuran' => $uk['nama_ukuran'],
+                'ukuran' => $uk['ukuran'],
+                'id_kategori' => $data['id_kategori']
+            ];
+            $dataHarga = [
+                'id' => service('uuid')->uuid4()->toString(),
+                'id_produk' => $id_produk,
+                'id_ukuran' => $idUkuran,
+                'harga' => $uk['harga']
+            ];
+            $ukuran->insert($dataUkuran);
+            $harga->insert($dataHarga);
+        }
+        if (!$ukuran->errors() && !$harga->errors()) {
+            $data['isValid'] = true;
+            return $this->respond($data);
+        } else {
+            $data['isValid'] = false;
+            $data['errors'] = [];
             $harga->errors() ? $data['errors'] += $harga->errors() : null;
             $ukuran->errors() ? $data['errors'] += $ukuran->errors() : null;
 

@@ -12,7 +12,7 @@ class Ukuran extends Model
     protected $returnType     = 'array';
     // protected $useSoftDeletes = true;
 
-    protected $allowedFields = ['id', 'id_produk', 'id_kategori', 'nama_ukuran', 'ukuran', 'created_at', 'updated_at'];
+    protected $allowedFields = ['id', 'id_produk', 'id_kategori', 'nama_ukuran', 'ukuran'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';

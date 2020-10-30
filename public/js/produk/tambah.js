@@ -1,6 +1,5 @@
 let form = document.getElementById('form')
 let formUkuran = document.getElementById('form-ukuran')
-let formUkuranBaru
 let kategoriInput = document.getElementById('id_kategori')
 let tombolTambahUkuran = document.getElementById('tambah-ukuran')
 let tombolHapusUkuran = document.querySelectorAll('.btn-hapus-ukuran')

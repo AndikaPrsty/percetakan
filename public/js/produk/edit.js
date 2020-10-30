@@ -1,15 +1,17 @@
 let produk, kategori, ukuran, harga, image
 let baseURL = window.location.origin
 let updatedProduk = {
-    id_produk : null,
+    id_produk: null,
     nama_produk: null,
     id_kategori: null,
     ukuran: [],
     harga: []
 }
+let nomor = 1
 let btnPreview
 let newImages = []
 let produkEdit = document.getElementById('edit-produk')
+let btnTambahUkuran = document.getElementById('tambah-ukuran')
 const urlParams = new URLSearchParams(window.location.search);
 const id_produk = urlParams.get('id');
 const formUkuran = document.getElementById('form-ukuran')
@@ -18,12 +20,19 @@ const backButton = document.getElementById('btn-back')
 const delButton = document.getElementById('btn-del')
 const submit = document.getElementById('submit')
 const addImageButton = document.getElementById('btn-img')
+let formUkuranBaru = document.getElementById('form-ukuran-baru')
 let nama_produkLama = document.getElementById('nama_produk')
 let id_kategoriLama = document.getElementById('id_kategori')
-let hargaLama
-let nama_ukuranLama
-let ukuranLama
+let hargaLama, nama_ukuranLama, ukuranLama
+let ukuran_baru = document.querySelectorAll('.ukuran_baru')
+let nama_ukuran_baru = document.querySelectorAll('.nama_ukuran_baru')
+let harga_baru = document.querySelectorAll('.harga_baru')
+let btnUkuranToggle = document.getElementById('ukuran_baru_toggle')
+let btnUkuranRemove = document.getElementById('ukuran_baru_remove')
+let ukuranBaru = null
 let editMode
+let idFormUkuran = []
+
 
 const showLoading = () => {
     Swal.fire({
@@ -53,6 +62,8 @@ const fetchProduk = async () => {
     showImgDelete(false)
     showEditButton(false)
     editMode = false
+    btnUkuranRemove.style.display = 'none'
+    formUkuranBaru.style.display = 'none'
     Swal.close()
 }
 
@@ -86,9 +97,9 @@ const responseAlert = (msg, cond = false) => {
         text: message
     })
 
-    cond ? clearInput() : null
-    cond ? formValid(true) : formValid(false, msg.errors)
-    disableAllInput(false)
+    // cond ? clearInput() : null
+    // cond ? formValid(true) : formValid(false, msg.errors)
+    // disableAllInput(false)
 
 }
 
@@ -96,8 +107,7 @@ const deleteImage = async (id) => {
     showLoading()
     let res = await fetch(`${baseURL}/api/produk/delete_image?id_image=${id}`)
     res = await res.json()
-    console.log(res)
-    res.isDeleted ? alertSuccess(res.msg, true) : alertSuccess(res.msg, false)
+    res.isDeleted ? alertSuccess(res.msg, true, true, false) : alertSuccess(res.msg, false, true, false)
 }
 
 const previewGambar = async (id) => {
@@ -178,8 +188,8 @@ const setProdukLama = () => {
 
 const setUkuranLama = () => {
     formUkuran.innerHTML = null
-    ukuran.forEach((ukuran,i) => {
-        console.log(ukuran)
+    ukuran.forEach((ukuran, i) => {
+
         let div = document.createElement('div')
         div.classList.add('row')
         div.innerHTML = `
@@ -251,11 +261,37 @@ const tampilGambar = (id) => {
 
 const hapusGambar = (id) => {
     let gambar = document.getElementById(`img-${id}`)
-    gambar.remove()
+    id ? gambar.remove() : null
     newImages = newImages.filter(img => {
         return img.id !== id
     })
     newImages.length === 0 ? document.getElementById('img-form').style.display = 'none' : null
+}
+
+const tambahUkuranHarga = async () => {
+    showLoading()
+    ukuran_baru.forEach((uk, i) => {
+        ukuranBaru.ukuran.push({
+            nama_ukuran: nama_ukuran_baru[i].value,
+            ukuran: uk.value,
+            harga: harga_baru[i].value
+        })
+        ukuranBaru.harga.push({
+            harga: harga_baru[i].value
+        })
+    })
+    ukuranBaru = JSON.stringify(ukuranBaru)
+    console.log(ukuranBaru)
+    let res = await fetch(`${baseURL}/api/produk/ukuran_harga`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: ukuranBaru
+    })
+    res = await res.json()
+    res.isValid ? hapusSemuaFormUkuran() : null
+    return res
 }
 
 const updateProduk = async () => {
@@ -267,18 +303,17 @@ const updateProduk = async () => {
     updatedProduk.harga = []
     ukuranLama.forEach((uk, i) => {
         updatedProduk.ukuran.push({
-            id:nama_ukuranLama[i].dataset.id,
+            id: nama_ukuranLama[i].dataset.id,
             nama_ukuran: nama_ukuranLama[i].value,
             ukuran: uk.value,
-            id_kategori:id_kategoriLama.value,
+            id_kategori: id_kategoriLama.value,
             harga: hargaLama[i].value
         })
         updatedProduk.harga.push({
-            id:hargaLama[i].dataset.id,
+            id: hargaLama[i].dataset.id,
             harga: hargaLama[i].value
         })
     })
-    console.log(updatedProduk)
     let produkData = JSON.stringify(updatedProduk)
     let res = await fetch(`${window.location.origin}/api/produk/update`, {
         method: "POST",
@@ -287,11 +322,11 @@ const updateProduk = async () => {
         },
         body: produkData
     })
+    console.log(produkData)
     res = await res.json()
-    console.log(res)
-    res.isValid ? alertSuccess('Berhasil memperbarui data produk',res.isValid,true,false) : responseAlert(res.errors,res.isValid)
-    // res.isValid ? sendGambar(res.id) : null
-
+    res.isValid ? sendNewImages() : null
+    !newImages.length > 0 && res.isValid ? sendNewImages() : null
+    res.isValid ? alertSuccess('Berhasil memperbarui data produk', res.isValid, true, false) : responseAlert(res, res.isValid)
 }
 
 const deleteProduk = async () => {
@@ -301,7 +336,88 @@ const deleteProduk = async () => {
     res.isDeleted ? alertSuccess(res.msg, res.isDeleted, false, true) : alertSuccess(res.msg, false, true, false)
 }
 
+const sendNewImages = () => {
+    let formData = new FormData
+    newImages.forEach(async img => {
+        formData.append('image', img)
+        formData.append('id_produk', produk.id)
+        let res = await fetch(`${baseURL}/api/produk/upload`, {
+            method: "POST",
+            body: formData
+        })
+        res = await res.json()
+    })
+
+    newImages = []
+    hapusGambar(null)
+}
+
+const tambahFormUkuranBaru = () => {
+    let div = document.createElement('div')
+    div.classList.add('row')
+    div.classList.add(`ukuran-${nomor}`)
+    let content = ''
+    content += ` <div class="col-4">
+    <div class="form-group">
+        <label>Nama Ukuran</label>
+        <input type="text" required="true" name="nama_ukuran" class="form-control nama_ukuran_baru"
+            placeholder="Enter email">
+    </div>
+</div>
+<div class="col-4">
+    <div class="form-group">
+        <label>Ukuran</label>
+        <input type="text" required="true" name="ukuran" class="form-control ukuran_baru"
+            placeholder="Enter email">
+    </div>
+
+</div>
+<div class="col-4">
+    <div class="form-group">
+        <label>Harga (Rp)</label>
+        <div class="input-group">
+            <input type="text" class="form-control harga_baru">
+            <span class="input-group-append">
+                <button type="button" id=${nomor} onClick="hapusFormUkuran('ukuran-${nomor}')"
+                    class="btn btn-danger btn-hapus-ukuran btn-flat"><i
+                        class="fas fa-minus"></i></button>
+            </span>
+        </div>
+    </div>
+</div>`
+    idFormUkuran.push({
+        id: `ukuran-${nomor}`
+    })
+    div.innerHTML = content
+    formUkuranBaru.append(div)
+    ukuran_baru = document.querySelectorAll('.ukuran_baru')
+    nama_ukuran_baru = document.querySelectorAll('.nama_ukuran_baru')
+    harga_baru = document.querySelectorAll('.harga_baru')
+}
+
+const hapusFormUkuran = (id) => {
+    console.log(id)
+    let tombol = document.querySelector(`.${id}`)
+    tombol.remove()
+}
+
+const hapusSemuaFormUkuran = () => {
+    idFormUkuran.forEach(id => {
+        document.getElementById(`.${id}`).remove()
+    })
+}
+
+const showTambahUkuran = () => {
+    document.getElementById('form-ukuran-baru').style.display = ''
+
+}
 fetchProduk()
+
+btnTambahUkuran.addEventListener('click', () => {
+    tambahFormUkuranBaru()
+    nomor++
+})
+
 
 produkEdit.addEventListener('click', (e) => {
     produkEdit.disabled = true
@@ -310,11 +426,14 @@ produkEdit.addEventListener('click', (e) => {
     backButton.innerText = 'Batal'
     showEditButton(true)
     delButton.disabled = true
+    document.getElementById('ukuran_baru_toggle').style.display = ''
     editMode = true
 })
 
 backButton.addEventListener('click', () => {
     !editMode ? window.location.replace(`${baseURL}/admin/produk`) : fetchProduk()
+    document.getElementById('form-ukuran-baru').style.display = 'none'
+    btnUkuranToggle.style.display = 'none'
 })
 
 delButton.addEventListener('click', async () => {
@@ -338,6 +457,38 @@ addImageButton.addEventListener('click', async () => {
     tambahGambar()
 })
 
-submit.addEventListener('click', () => {
-    updateProduk()
+btnUkuranToggle.addEventListener('click', (e) => {
+    e.preventDefault()
+    ukuranBaru = {
+        id_produk: produk.id,
+        id_kategori: produk.id_kategori,
+        ukuran: [],
+        harga: []
+    }
+    showTambahUkuran()
+    btnUkuranToggle.style.display = 'none'
+    btnUkuranRemove.style.display = ''
+})
+
+btnUkuranRemove.addEventListener('click', (e) => {
+    e.preventDefault()
+    btnUkuranToggle.style.display = ''
+    btnUkuranRemove.style.display = 'none'
+    formUkuranBaru.style.display = 'none'
+    ukuranBaru = null
+})
+
+submit.addEventListener('click', async () => {
+    let res = await alertConfirmation('Apakah Anda Yakin Ingin Memperbarui Produk Ini?', 'green')
+    if (ukuranBaru === null) {
+        if (res.value) {
+            updateProduk()
+        }
+    } else {
+        if (res.value) {
+            let res = await tambahUkuranHarga()
+            res.isValid ? updateProduk() : responseAlert(res, res.isValid)
+        }
+    }
+
 })

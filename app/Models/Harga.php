@@ -12,7 +12,7 @@ class Harga extends Model
     protected $returnType     = 'array';
     // protected $useSoftDeletes = true;
 
-    protected $allowedFields = ['id', 'id_produk', 'id_ukuran', 'harga', 'created_at', 'updated_at'];
+    protected $allowedFields = ['id', 'id_produk', 'id_ukuran', 'harga'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';

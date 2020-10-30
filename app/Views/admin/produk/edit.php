@@ -54,8 +54,48 @@
                                             </select>
                                         </div>
                                         <div id="form-ukuran">
-
                                         </div>
+                                        <div id="form-ukuran-baru" style="display:none;">
+                                            <hr>
+                                            <h3 class="h3">tambah ukuran baru</h3>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <label>Nama Ukuran</label>
+                                                        <input type="text" required="true" name="nama_ukuran"
+                                                            class="form-control nama_ukuran_baru form-produk">
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <label>Ukuran</label>
+                                                        <input type="text" required="true" name="ukuran"
+                                                            class="form-control ukuran_baru form-produk">
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <label>Harga (Rp)</label>
+                                                        <div class="input-group">
+                                                            <input type="text" name="harga"
+                                                                class="form-control harga_baru form-produk">
+                                                            <span class="input-group-append">
+                                                                <button type="button" id="tambah-ukuran"
+                                                                    class="btn btn-success btn-flat"><i
+                                                                        class="fas fa-plus"></i></button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button id="ukuran_baru_toggle" style="display: none;"
+                                            class="btn btn-warning"><i class="fas fa-plus"></i> Tambah
+                                            Ukuran</button>
+                                        <button id="ukuran_baru_remove" style="display: none;" class="btn btn-danger">
+                                            Batal</button>
                                         <!-- /.card-body -->
                                     </form>
                                 </div>

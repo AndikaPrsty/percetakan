@@ -12,7 +12,7 @@ class Gambar extends Model
     protected $returnType     = 'array';
     // protected $useSoftDeletes = true;
 
-    protected $allowedFields = ['id', 'id_produk', 'gambar', 'created_at', 'updated_at'];
+    protected $allowedFields = ['id', 'id_produk', 'gambar'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';

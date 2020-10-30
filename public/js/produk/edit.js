@@ -34,6 +34,21 @@ const fetchProduk = async () => {
     Swal.close()
 }
 
+const alertConfirmation = async (msg,color,func) => {
+    let res = await Swal.fire({
+        title: msg,
+        showCancelButton: true,
+        confirmButtonText: 'Konfirmasi' ,
+        cancelButtonText:'Batal',
+        confirmButtonColor: color ? color : 'red'
+    })
+    res.value ? func() : alert('batal')
+}
+
+const deleteImage = async () => {
+    let res = await fetch(`${baseURL}/api/produk`)
+}
+
 const previewGambar = async (id) => {
     let prevImg = image.filter(img => {
         return img.id === id

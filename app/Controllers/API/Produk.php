@@ -75,4 +75,34 @@ class Produk extends ResourceController
 
         return $this->respond($data);
     }
+    public function delete_image()
+    {
+        helper('filesystem');
+        $id = $this->request->getGet('id_image');
+        $gambar = new \App\Models\Gambar;
+        $fileName = $gambar->where('id', $id)->get()->getResult()[0]->gambar;
+        if (count($gambar->where('id', $id)->get()->getResult()) === 0) {
+            $data = [
+                'msg' => 'ID gambar tidak valid',
+                'isDeleted' => false
+            ];
+            return $this->respond($data);
+        } else {
+            $gambar->where('id', $id)->delete();
+            if (count($gambar->where('id', $id)->get()->getResult()) === 0) {
+                $data = [
+                    'msg' => 'Gambar terhapus',
+                    'isDeleted' => true,
+                ];
+                return $this->respond($data);
+            } else {
+                $data = [
+                    'msg' => 'Gambar tidak terhapus',
+                    'isDeleted' => false,
+                    'filename' => $fileName
+                ];
+                return $this->respond($data);
+            }
+        }
+    }
 }

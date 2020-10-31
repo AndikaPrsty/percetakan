@@ -35,7 +35,7 @@ const setProduk = () => {
         <td>${produk.nama_produk}</td>
         <td>${produk.nama_kategori}</td>
         <td><span class="badge badge-success">Approved</span></td>
-        <td><a href="${baseURL}/admin/produk/edit?id=${produk.id}" class="btn btn-info"><i class="fas fa-eye mr-1"></i>Detail</a>
+        <td><a href="${baseURL}/admin/produk/edit?id=${produk.id}" class="btn btn-sm btn-info"><i class="fas fa-eye mr-1"></i>Detail</a>
         </td>`
         nomor++
         tr.innerHTML = content

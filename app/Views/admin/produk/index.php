@@ -26,7 +26,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <div class="card">
+                    <div class="card card-pink">
                         <div class="card-header">
                             <h3 class="card-title">List Produk</h3>
                             <div class="card-tools">
@@ -35,7 +35,7 @@
                                         class="form-control float-right" placeholder="Search">
 
                                     <div class="input-group-append">
-                                        <button type="submit" class="btn btn-default"><i
+                                        <button type="submit" class="btn btn-default mr-2"><i
                                                 class="fas fa-search"></i></button>
                                     </div>
                                     <select id="filter-select" class="form-control">
@@ -62,7 +62,7 @@
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-                            <button id="tambah_produk" class="btn btn-primary float-right">tambah produk</button>
+                            <button id="tambah_produk" class="btn btn-primary btn-sm float-right">tambah produk</button>
                         </div>
                     </div>
                 </div>

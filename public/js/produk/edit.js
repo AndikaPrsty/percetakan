@@ -341,6 +341,7 @@ const sendNewImages = () => {
     newImages.forEach(async img => {
         formData.append('image', img)
         formData.append('id_produk', produk.id)
+        formData.append('id_kategori', id_kategoriLama.value)
         let res = await fetch(`${baseURL}/api/produk/upload`, {
             method: "POST",
             body: formData

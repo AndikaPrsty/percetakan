@@ -232,6 +232,7 @@ const sendGambar = async (id) => {
     if (images.length === 0) {
         formData.append('dummy_image', 'ProdukDefault.jpg')
         formData.append('id_produk', id)
+        formData.append('id_kategori', id_kategori.value)
         let res = await fetch(`${window.location.origin}/api/produk/upload`,{
             method:'POST',
             body:formData
@@ -239,6 +240,7 @@ const sendGambar = async (id) => {
         res = await res.json()
     }
     images.forEach(async img => {
+        formData.append('id_kategori', id_kategori.value)
         formData.append('id_produk',id)
         formData.append('image',img)
 

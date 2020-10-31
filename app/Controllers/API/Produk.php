@@ -93,7 +93,8 @@ class Produk extends ResourceController
         $data = [
             'id' => $uuid,
             'gambar' => $fileName,
-            'id_produk' => $this->request->getPost('id_produk')
+            'id_produk' => $this->request->getPost('id_produk'),
+            'id_kategori' => $this->request->getPost('id_kategori')
         ];
 
         $gambar->insert($data);

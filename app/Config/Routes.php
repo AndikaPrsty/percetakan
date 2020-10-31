@@ -34,6 +34,7 @@ $routes->setAutoRoute(true);
 $routes->resource('produk');
 $routes->resource('kategori');
 $routes->get('/', 'Home::index');
+$routes->get('/produk', 'Home::produk');
 
 /**
  * --------------------------------------------------------------------

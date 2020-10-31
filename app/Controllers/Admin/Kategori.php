@@ -4,11 +4,11 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 
-class Produk extends BaseController
+class Kategori extends BaseController
 {
     public function set_view($path)
     {
-        return view('admin/produk/' . $path);
+        return view('admin/kategori/' . $path);
     }
     public function index()
     {
@@ -22,6 +22,8 @@ class Produk extends BaseController
     {
         return $this->set_view('edit');
     }
+
+
     //--------------------------------------------------------------------
 
 }

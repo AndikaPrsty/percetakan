@@ -11,13 +11,45 @@ class Kategori extends ResourceController
 
     public function index()
     {
-        $data = [
-            'kategori' => $this->model->findAll()
-        ];
-        return $this->respond($data);
+        $id = $this->request->getGet('id');
+
+        if ($id) {
+            $data['kategori'] = $this->model->where('id', $id)->get()->getResult();
+            return $this->respond($data);
+        } else {
+            $data = $this->model->getKategori();
+            return $this->respond($data);
+        }
     }
     public function create()
     {
-        return $this->respond(['data' => 'created']);
+        $data = $this->request->getJSON(true);
+        $uuid = service('uuid')->uuid4()->toString();
+        $data['id'] = $uuid;
+
+        $this->model->insert($data);
+        if ($this->model->errors()) {
+            $data['errors'] = $this->model->errors();
+            $data['isValid'] = false;
+            return $this->respond($data);
+        } else {
+            $data['isValid'] = true;
+            return $this->respond($data);
+        }
+    }
+    public function update($id = null)
+    {
+        $data = $this->request->getJSON(true);
+        $this->model->update($data['id'], $data);
+
+        if ($this->model->errors()) {
+            $data['errors'] = $this->model->errors();
+            $data['isValid'] = false;
+            return $this->respond($data);
+        } else {
+            $data['isValid'] = true;
+            return $this->respond($data);
+        }
+        return $this->respond($data);
     }
 }

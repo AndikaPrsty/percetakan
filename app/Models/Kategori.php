@@ -21,15 +21,23 @@ class Kategori extends Model
 
     protected $validationRules    = [
         'id' => 'required',
-        'nama_kategori' => 'required',
+        'nama_kategori' => 'required|is_unique[kategori.nama_kategori]',
     ];
     protected $validationMessages = [
         'id' => [
             'required' => 'ID Tidak Boleh Kosong'
         ],
         'nama_kategori' => [
-            'required' => 'Nama Kategori Harus DIisi'
+            'required' => 'Nama Kategori Harus DIisi',
+            'is_unique' => 'Gunakan nama kategori yang lain'
         ]
     ];
     protected $skipValidation     = false;
+
+    public function getKategori()
+    {
+        $kategori = new \App\Models\Kategori;
+        $data['kategori'] = $kategori->select('kategori.id,gambar,nama_kategori')->join('gambar', 'gambar.id_kategori = kategori.id', 'left')->groupBy('id_kategori')->get()->getResultArray();
+        return $data;
+    }
 }

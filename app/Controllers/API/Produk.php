@@ -11,8 +11,11 @@ class Produk extends ResourceController
 
     public function index()
     {
+        $kategori = $this->request->getGet('kategori');
         $id = $this->request->getGet('id');
-        $id ?  $data = $this->model->getProduk($id) : $data = $this->model->getProduk();
+
+        $id && !$kategori ?  $data = $this->model->getProduk($id) : $data = $this->model->getProduk();
+        !$id && $kategori ? $data = $this->model->getProdukByKategori($kategori) : null;
         return $this->respond($data);
     }
     public function create()

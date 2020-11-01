@@ -37,7 +37,7 @@ class Kategori extends Model
     public function getKategori()
     {
         $kategori = new \App\Models\Kategori;
-        $data['kategori'] = $kategori->select('kategori.id,gambar,nama_kategori')->join('gambar', 'gambar.id_kategori = kategori.id', 'left')->groupBy('id_kategori')->get()->getResultArray();
+        $data['kategori'] = $kategori->select('kategori.id,gambar.gambar,kategori.nama_kategori')->join('gambar', 'gambar.id_kategori = kategori.id', 'left')->groupBy('kategori.id')->get()->getResult();
         return $data;
     }
 }

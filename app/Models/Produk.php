@@ -63,4 +63,20 @@ class Produk extends Model
             return $data;
         }
     }
+    public function getProdukByKategori($kategori)
+    {
+        $produk = new \App\Models\Produk;
+        $gambar = new \App\Models\Gambar;
+
+        $data = $produk->select('produk.id,nama_produk,produk.id_kategori,nama_kategori,ukuran.ukuran,ukuran.nama_ukuran,gambar.gambar')->join('kategori', 'kategori.id = produk.id_kategori', 'left')->join('ukuran', 'ukuran.id_produk = produk.id', 'left')->join('gambar', 'gambar.id_produk = produk.id', 'left')->where(['kategori.nama_kategori' => $kategori])->groupBy('nama_produk')->get()->getResultArray();
+
+        // $images = [];
+
+        for ($i = 0; $i < count($data); $i++) {
+            $data[$i]['gambar'] = $gambar->where('id_produk', $data[$i]['id'])->get()->getResultArray();
+        }
+
+
+        return $data;
+    }
 }

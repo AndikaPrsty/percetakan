@@ -1,5 +1,6 @@
 <?= $this->extend('templates/template') ?>
 
+
 <?= $this->section('content') ?>
 <div id="portfolio">
     <div class="container-fluid p-0 ">

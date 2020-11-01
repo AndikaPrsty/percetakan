@@ -44,8 +44,8 @@ const setProduk = () => {
             </div>
         </div>
     </div>
-    <figcaption class="figure-caption py-2 bg-secondary text-white text-center">
-        Kemasan Makanan
+    <figcaption onClick="orderNow('${prod.id}')" style="cursor:pointer;" class="figure-caption py-2 bg-primary text-white text-center">
+        Pesan Sekarang
     </figcaption>`
     produkContainer.append(div)
     })
@@ -72,6 +72,10 @@ const setProdukImage = () => {
         </li>`
         })
     })
+}
+
+const orderNow = (id_produk) => {
+    window.location.replace(`${baseURL}/order/${nama_kategori.toLowerCase()}?id_produk=${id_produk}`)
 }
 
 

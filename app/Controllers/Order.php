@@ -10,6 +10,10 @@ class Order extends BaseController
     }
     public function paperbag()
     {
-        return view('order/paperbag');
+        return view('order/paperbag-pastik');
+    }
+    public function plastik()
+    {
+        return view('order/paperbag-plastik');
     }
 }

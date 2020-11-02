@@ -49,7 +49,7 @@
                                     <div class="col-lg-1"></div>
                                     <div class="col-lg-6 col-sm-12 col-xs-12">
                                         <hr class="divider">
-                                        <h5 class="h5 text-center bg-pink">Contoh Produk</h5>
+                                        <h5 class="h5 text-center bg-pink">Sample Produk</h5>
                                         <hr class="divider">
                                         <div id="ProdukExample" class="carousel slide" data-ride="carousel">
                                             <ol class="carousel-indicators" id="image-indicators">

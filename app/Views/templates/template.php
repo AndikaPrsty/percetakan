@@ -19,7 +19,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css"
         rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="/css/styles.css" rel="stylesheet" />
+    <link href="<?= base_url() ?>/css/styles.css" rel="stylesheet" />
 </head>
 
 <body id="page-top">
@@ -37,7 +37,7 @@
                     <li class="nav-item"><a class="nav-link js-scroll-trigger p-3" href="#portfolio">Produk</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger p-3" href="#contact">Kontak</a></li>
                     <li class="nav-item">
-                        <a href="/produk" class="nav-link btn btn-primary btn-xl p-3">Cek Pesanan Anda</a>
+                        <a href="/order" class="nav-link btn btn-primary btn-xl p-3">Cek Pesanan Anda</a>
                     </li>
                 </ul>
             </div>
@@ -79,7 +79,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
     <!-- Core theme JS-->
-    <script src="/js/scripts.js"></script>
+    <script src="<?= base_url() ?>/js/scripts.js"></script>
     <?= $this->renderSection('javascript') ?>
 </body>
 

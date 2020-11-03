@@ -2,6 +2,7 @@ let produk
 let titleProduk = document.getElementById('title-nama-produk')
 let imageContainer = document.getElementById('image-container')
 let imageIndicators = document.getElementById('image-indicators')
+let setUkuran = document.getElementById('ukuran')
 
 const fetchProduk = async () => {
     let res = await fetch(`${baseURL}/api/produk?id=${id_produk}`)
@@ -10,7 +11,15 @@ const fetchProduk = async () => {
     console.log(produk)
     titleProduk.innerText = produk.produk.nama_produk
     setProductExample()
+    setUkuranProduk()
     Swal.close()
+
+}
+
+const setUkuranProduk = () => {
+    produk.ukuran.forEach(uk => {
+        setUkuran.innerHTML += `<option value="${uk.ukuran}">${uk.ukuran}</option>`
+    })
 
 }
 

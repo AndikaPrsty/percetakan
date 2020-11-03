@@ -13,5 +13,5 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('javascript')  ?>
-<script src="/js/home.js"></script>
+<script src="<?= base_url() ?>/js/home.js"></script>
 <?= $this->endSection() ?>

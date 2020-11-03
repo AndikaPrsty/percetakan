@@ -15,5 +15,5 @@
 </section>
 <?= $this->endSection() ?>
 <?= $this->section('javascript') ?>
-<script src="/js/produk.js"></script>
+<script src="<?= base_url() ?>/js/produk.js"></script>
 <?= $this->endSection() ?>

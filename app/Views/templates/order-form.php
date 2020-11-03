@@ -37,7 +37,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="telp">No Telp / Whatsapp *</label>
-                                            <input type="text" name="telp" class="form-control" id="telp"
+                                            <input type="number" name="telp" class="form-control" id="telp"
                                                 placeholder="">
                                         </div>
                                         <div class="form-group">
@@ -102,7 +102,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputPassword1">Kode POS *</label>
-                                            <input class="form-control" name="kode-pos" id="kode-pos">
+                                            <input type="number" class="form-control" name="kode-pos" id="kode-pos">
                                         </div>
 
                                     </div>
@@ -116,7 +116,7 @@
                         <!-- /.card-body -->
 
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" id="submit" class="btn btn-primary">Submit</button>
                         </div>
                     </div>
                     <!-- /.card -->

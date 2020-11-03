@@ -1,4 +1,4 @@
-const baseURL = window.location.origin
+const baseURL = window.location.href
 let kategoriKontainer = document.getElementById('kategori-container')
 
 let kategori

@@ -65,8 +65,23 @@ const setOrderData = () => {
     order.order.sablon_warna = sablon.value
     order.dataDiri.alamat_lengkap = Object.values(order.dataDiri.alamat).join(', ')
 
-    console.log(order)
+    let orderJSON = JSON.stringify(order)
+    console.log(orderJSON)
+    // sendOrder(orderJSON)
 
+}
+
+const sendOrder = async (data) => {
+    let res = await fetch(`${baseURL}/api/pesanan/create`,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:data
+    })
+
+    res = await res.json()
+    console.log(res)
 }
 
 noDesignRadio.addEventListener('change', () => {

@@ -38,7 +38,13 @@ class Pesanan extends Model
         ],
         'nomor_pesanan' => [
             'required' => 'Nomor Pesanan Tidak Boleh Kosong'
-        ]
+        ],
+        'ukuran' => [
+            'required' => 'Ukuran Tidak Boleh Kosong'
+        ],
+        'tanggal_pesan' => [
+            'required' => 'Tanggal Pesan Tidak Boleh Kosong'
+        ],
     ];
     protected $skipValidation     = false;
 }

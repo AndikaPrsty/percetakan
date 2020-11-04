@@ -27,7 +27,7 @@ const fetchProvinsi = async () => {
 }
 
 const setKabupaten = async (id_provinsi) => {
-    kabupatenForm.innerHTML = null
+    kabupatenForm.innerHTML = '<option value="">Kabupaten</option>'
     kecamatanForm.innerHTML = null
     kelurahanForm.innerHTML = null
     let res = await fetch(`https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=${id_provinsi}`)
@@ -40,7 +40,7 @@ const setKabupaten = async (id_provinsi) => {
 }
 
 const setKecamatan = async (id_kota) => {
-    kecamatanForm.innerHTML = null
+    kecamatanForm.innerHTML = '<option value="">Kecamatan</option>'
     let res = await fetch(`http://dev.farizdotid.com/api/daerahindonesia/kecamatan?id_kota=${id_kota}`)
     res = await res.json()
     alamat.kecamatan = res.kecamatan
@@ -50,7 +50,7 @@ const setKecamatan = async (id_kota) => {
 }
 
 const setKelurahan = async (id_kecamatan) => {
-    kelurahanForm.innerHTML = null
+    kelurahanForm.innerHTML = '<option value="">Kelurahan</option>'
     let res = await fetch(`http://dev.farizdotid.com/api/daerahindonesia/kelurahan?id_kecamatan=${id_kecamatan}`)
     res = await res.json()
     alamat.kelurahan = res.kelurahan
@@ -60,7 +60,7 @@ const setKelurahan = async (id_kecamatan) => {
 }
 
 const setProvinsi = () => {
-    provinsiForm.innerHTML = null
+    provinsiForm.innerHTML = `<option value="">Provinsi</option>`
     alamat.provinsi.forEach(prov => {
         provinsiForm.innerHTML += `<option value="${prov.id}">${prov.nama}</option>`
     })
@@ -71,6 +71,7 @@ provinsiForm.addEventListener('change',(e) => {
 })
 
 kabupatenForm.addEventListener('change',(e) => {
+    console.log('kabupaten')
     setKecamatan(e.target.value)
 })
 

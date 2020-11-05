@@ -17,6 +17,7 @@ class Pesanan extends ResourceController
     {
         $pembeli = new \App\Models\Pembeli;
         $alamat = new \App\Models\Alamat;
+        $email = \Config\Services::email();
 
         $data = $this->request->getJSON(true);
 
@@ -49,8 +50,8 @@ class Pesanan extends ResourceController
             'kode_pesanan' => $kode_pesanan,
             'ukuran' => $data['order']['ukuran'],
             'materi' => $data['order']['materi'],
-            'status' => 'ditampung',
-            'tanggal_pesan' => date('d-m-Y')
+            'status' => 'pending',
+            'tanggal_pesan' => date('Y-m-d')
         ];
 
         $dataAlamat = [
@@ -62,15 +63,42 @@ class Pesanan extends ResourceController
             'kelurahan' => $data['dataDiri']['alamat']['kelurahan'],
             'kode_pos' => $data['dataDiri']['alamat']['kodePOS'],
         ];
+        $data['nomor_pesanan'] = $nomor_pesanan;
+        $data['kode_pesanan'] = $kode_pesanan;
+        $data['id_pesanan'] = $id_pesanan;
+
+        $email->setTo($data['dataDiri']['email']);
+        $email->setSubject('Konfirmasi Pesanan');
+        $email->setMessage(view('email/order-info', $data));
+        $dataResponse = [];
+
+        if (!$email->send()) {
+            return $this->respond($dataResponse['isValid'] = false);
+        }
 
         $pembeli->insert($dataPembeli);
         $pembeli->errors() ? null : $this->model->insert($dataPesanan);
         $this->model->errors() ? null : $alamat->insert($dataAlamat);
 
+
         if (!$this->model->errors() && !$pembeli->errors() && !$alamat->errors()) {
             $dataResponse = [
-                ''
+                'isValid' => true,
             ];
+            return $this->respond($dataResponse);
+        } else {
+            $this->model->where('id_pembeli', $id_pembeli)->delete();
+            $pembeli->where('id', $id_pembeli)->delete();
+            $alamat->where('id_pesanan', $id_pesanan)->delete();
+            $dataResponse = [
+                'isValid' => false,
+                'errors' => []
+            ];
+            $this->model->errors ? $dataResponse['errors'] += $this->model->errors() : null;
+            $pembeli->errors() ? $dataResponse['errors'] += $pembeli->errors() : null;
+            $alamat->errors()  ? $dataResponse['errors'] += $alamat->errors() : null;
+
+            return $this->respond($dataResponse);
         }
 
         return $this->respond($dataAlamat);

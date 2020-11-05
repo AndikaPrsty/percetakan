@@ -12,7 +12,7 @@ class Pesanan extends Model
     protected $returnType     = 'array';
     // protected $useSoftDeletes = true;
 
-    protected $allowedFields = ['id', 'id_pembeli', 'id_produk', 'nomor_pesanan', 'ukuran', 'materi', 'status', 'tanggal_pesan', 'keterangan'];
+    protected $allowedFields = ['id', 'id_pembeli', 'id_produk', 'nomor_pesanan', 'kode_pesanan', 'ukuran', 'materi', 'status', 'tanggal_pesan', 'keterangan'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
@@ -23,7 +23,7 @@ class Pesanan extends Model
         'id' => 'required',
         'id_pembeli' => 'required',
         'id_produk' => 'required',
-        'nomor_pesanan' => 'requried',
+        'nomor_pesanan' => 'required',
         'ukuran' => 'required',
     ];
     protected $validationMessages = [

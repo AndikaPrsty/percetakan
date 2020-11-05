@@ -60,15 +60,18 @@
                                 <th>ukuran</th>
                                 <th>materi</th>
                                 <th>Jumlah</th>
+                                <th>Total Harga</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><?= $order['nama_produk'] ?></td>
-                                <td><?= $order['ukuran'] ?></td>
+                                <td><?= $ukuran ?></td>
                                 <td><?= $order['materi'] ?></td>
-
                                 <td><?= $order['jumlah'] ?></td>
+                                <td>
+                                    <h3>Rp.<?= $total_harga ?></h3>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

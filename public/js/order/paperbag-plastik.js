@@ -10,19 +10,22 @@ let order = {
             kelurahan: null,
             kodePOS: null
         },
-        alamat_lengkap:null
+        alamat_lengkap: null
     },
     order: {
         id_produk: null,
         nama_produk: null,
-        ukuran: null,
+        id_ukuran: null,
         warna: null,
         jumlah: null,
+        harga:null,
         sablon_warna: null,
         materi: null
     }
 }
 let designFile = []
+
+let harga = 0
 
 
 let nama = document.getElementById('nama')
@@ -34,7 +37,6 @@ let kecamatan = document.getElementById('kecamatan')
 let kelurahan = document.getElementById('kelurahan')
 let kodePOS = document.getElementById('kode-pos')
 let ukuran = document.getElementById('ukuran')
-let ukuranCustom = document.getElementById('ukuran-custom')
 let warna = document.getElementById('warna')
 let sablon = document.getElementById('sablon')
 let jumlah = document.getElementById('jumlah')
@@ -45,6 +47,9 @@ let designInput = document.getElementById('design-input')
 let materiInput = document.getElementById('materi-design-input')
 let noDesignRadio = document.getElementById('no-design')
 let haveDesignRadio = document.getElementById('have-design')
+let subTotal = document.getElementById('sub-total')
+let pajak = document.getElementById('pajak')
+let total = document.getElementById('total')
 let submit = document.getElementById('submit')
 
 const setOrderData = () => {
@@ -59,29 +64,46 @@ const setOrderData = () => {
     order.order.nama_produk = document.getElementById('title-nama-produk').innerText
     order.order.id_produk = id_produk
     order.order.warna = warna.value
-    order.order.ukuran = ukuranCustom.value === '' ? ukuran.value : ukuranCustom.value 
+    order.order.id_ukuran = ukuran.value
     order.order.jumlah = jumlah.value
     order.order.materi = materi.value
     order.order.sablon_warna = sablon.value
+    order.order.harga = harga
     order.dataDiri.alamat_lengkap = Object.values(order.dataDiri.alamat).join(', ')
 
     let orderJSON = JSON.stringify(order)
     console.log(orderJSON)
-    // sendOrder(orderJSON)
+    sendOrder(orderJSON)
 
 }
 
 const sendOrder = async (data) => {
-    let res = await fetch(`${baseURL}/api/pesanan/create`,{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
+    showLoading()
+    let res = await fetch(`${baseURL}/api/pesanan/create`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
         },
-        body:data
+        body: data
     })
 
     res = await res.json()
     console.log(res)
+    Swal.close()
+    res.isValid ? responseAlert('Permintaan Pesanan Anda Berhasil Dikirim, Silahkan cek email anda',res.isValid) : responseAlert(res,res.isValid)
+
+}
+
+const responseAlert = async (msg, cond = false) => {
+    let message
+    cond ? message = msg : message = Object.values(msg.errors).join(' | ')
+   await Swal.fire({
+        icon: cond ? 'success' : 'error',
+        title: cond ? 'Success' : 'Oops...',
+        text: message
+    })
+
+    cond ? window.location.replace(`${baseURL}/order`) : null
 }
 
 noDesignRadio.addEventListener('change', () => {
@@ -98,14 +120,24 @@ haveDesignRadio.addEventListener('change', () => {
 })
 
 ukuran.addEventListener('change',(e) => {
-    e.target.value == 'custom' ? document.getElementById('ukuranCustomInput').style.display = null : document.getElementById('ukuranCustomInput').style.display = 'none'
-    ukuranCustom.value = ''
+    harga = e.target.options[e.target.selectedIndex].getAttribute('harga')
+    harga = parseInt(harga)
 })
 
-design.addEventListener('change',(e) => {
+design.addEventListener('change', (e) => {
     designFile.push(e.target.files[0])
     designLabel.innerText = designFile.map(design => design.name).join(', ')
 })
+
+submit.disabled = true
+
+jumlah.addEventListener('keyup', (e) => {
+    e.target.value >= 100 ? submit.disabled = false : submit.disabled = true
+    subTotal.innerText = `Rp.${(e.target.value * harga)}`
+    total.innerText = subTotal.innerText
+
+})
+
 
 submit.addEventListener('click', (e) => {
     e.preventDefault()

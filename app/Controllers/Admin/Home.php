@@ -10,6 +10,10 @@ class Home extends BaseController
     {
         return view('admin/index');
     }
+    public function order_detail()
+    {
+        return view('admin/order-detail');
+    }
 
 
     //--------------------------------------------------------------------

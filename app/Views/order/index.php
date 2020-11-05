@@ -37,4 +37,5 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('javascript') ?>
+<script src="/js/order/index.js"></script>
 <?= $this->endSection() ?>

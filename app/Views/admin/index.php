@@ -118,16 +118,7 @@
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>NO.0001</td>
-                                        <td>John Doe</td>
-                                        <td>20cmx20cm</td>
-                                        <td>100</td>
-                                        <td>2020-10-10</td>
-                                        <td><span class="badge badge-info">belum diproses</span></td>
-                                        <td><button class="btn btn-info btn-sm">lihat detail pesanan</button></td>
-                                    </tr>
+                                <tbody id="tabel-pesanan-masuk">
                                 </tbody>
                             </table>
                         </div>

@@ -12,7 +12,7 @@ class Pesanan extends Model
     protected $returnType     = 'array';
     // protected $useSoftDeletes = true;
 
-    protected $allowedFields = ['id', 'id_pembeli', 'id_produk', 'nomor_pesanan', 'kode_pesanan', 'ukuran', 'materi', 'status', 'tanggal_pesan', 'keterangan'];
+    protected $allowedFields = ['id', 'id_pembeli', 'id_produk', 'nomor_pesanan', 'kode_pesanan', 'id_ukuran', 'materi', 'status', 'tanggal_pesan', 'keterangan', 'jumlah', 'total_harga'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
@@ -24,7 +24,9 @@ class Pesanan extends Model
         'id_pembeli' => 'required',
         'id_produk' => 'required',
         'nomor_pesanan' => 'required',
-        'ukuran' => 'required',
+        'id_ukuran' => 'required',
+        'total_harga' => 'required',
+        'jumlah' => 'required'
     ];
     protected $validationMessages = [
         'id' => [
@@ -39,7 +41,7 @@ class Pesanan extends Model
         'nomor_pesanan' => [
             'required' => 'Nomor Pesanan Tidak Boleh Kosong'
         ],
-        'ukuran' => [
+        'id_ukuran' => [
             'required' => 'Ukuran Tidak Boleh Kosong'
         ],
         'tanggal_pesan' => [
@@ -47,4 +49,34 @@ class Pesanan extends Model
         ],
     ];
     protected $skipValidation     = false;
+
+    public function getPesanan($id = null)
+    {
+        $pesanan = new \App\Models\Pesanan;
+        $ukuran = new \App\Models\Ukuran;
+        $alamat = new  \App\Models\Alamat;
+        $produk = new \App\Models\Produk;
+        $pembeli = new \App\Models\Pembeli;
+        $data = [];
+
+        if ($id) {
+            $data = $pesanan->where('id', $id)->get()->getResultArray();
+            for ($i = 0; $i < count($data); $i++) {
+                $data[$i]['ukuran'] = $ukuran->where('id', $data[$i]['id_ukuran'])->get()->getResultArray();
+                $data[$i]['pembeli'] = $pembeli->where('id', $data[$i]['id_pembeli'])->get()->getResultArray();
+                $data[$i]['produk'] = $produk->where('id', $data[$i]['id_produk'])->get()->getResultArray();
+                $data[$i]['alamat'] = $alamat->where('id_pesanan', $data[$i]['id'])->get()->getResultArray();
+            }
+            return $data;
+        } else {
+            $data = $pesanan->where('status', 'terkonfirmasi')->get()->getResultArray();
+            for ($i = 0; $i < count($data); $i++) {
+                $data[$i]['ukuran'] = $ukuran->where('id', $data[$i]['id_ukuran'])->get()->getResultArray();
+                $data[$i]['pembeli'] = $pembeli->where('id', $data[$i]['id_pembeli'])->get()->getResultArray();
+                $data[$i]['produk'] = $produk->where('id', $data[$i]['id_produk'])->get()->getResultArray();
+                $data[$i]['alamat'] = $alamat->where('id_pesanan', $data[$i]['id'])->get()->getResultArray();
+            }
+            return $data;
+        }
+    }
 }

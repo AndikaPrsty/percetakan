@@ -8,6 +8,10 @@ class Order extends BaseController
     {
         return view('order/index');
     }
+    public function order_detail()
+    {
+        return view('order/order-detail.php');
+    }
     public function paperbag()
     {
         return view('order/paperbag-plastik');

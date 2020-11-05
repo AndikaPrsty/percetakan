@@ -18,7 +18,7 @@ const fetchProduk = async () => {
 
 const setUkuranProduk = () => {
     produk.ukuran.forEach(uk => {
-        setUkuran.innerHTML += `<option value="${uk.ukuran}">${uk.ukuran}</option>`
+        setUkuran.innerHTML += `<option harga="${uk.harga}" value="${uk.id}">${uk.ukuran} | Rp.${uk.harga}/pcs</option>`
     })
 
 }

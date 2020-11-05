@@ -11,12 +11,22 @@ class Pesanan extends ResourceController
 
     public function index()
     {
+        $id_pesanan = $this->request->getGet('orderId');
+        $data = $id_pesanan ? $this->model->getPesanan($id_pesanan) : $this->model->getPesanan();
+        if (count($data) === 0) {
+            $data['isValid'] = false;
+            return $this->respond($data);
+        } else {
+            return $this->respond($data);
+        }
     }
 
     public function create()
     {
         $pembeli = new \App\Models\Pembeli;
         $alamat = new \App\Models\Alamat;
+        $harga = new \App\Models\Harga;
+        $ukuran = new \App\Models\Ukuran;
         $email = \Config\Services::email();
 
         $data = $this->request->getJSON(true);
@@ -42,16 +52,21 @@ class Pesanan extends ResourceController
         $kode_pesanan = date('dmy') . $nomor_pesanan;
         $nomor_pesanan = $kode . $nomor_pesanan;
 
+        $total_harga = $harga->where('id_ukuran', $data['order']['id_ukuran'])->get()->getResult()[0]->harga;
+        $total_harga = $total_harga * $data['order']['jumlah'];
+
         $dataPesanan = [
             'id' => $id_pesanan,
             'id_pembeli' => $id_pembeli,
             'id_produk' => $data['order']['id_produk'],
             'nomor_pesanan' => $nomor_pesanan,
             'kode_pesanan' => $kode_pesanan,
-            'ukuran' => $data['order']['ukuran'],
+            'id_ukuran' => $data['order']['id_ukuran'],
             'materi' => $data['order']['materi'],
             'status' => 'pending',
-            'tanggal_pesan' => date('Y-m-d')
+            'jumlah' => $data['order']['jumlah'],
+            'tanggal_pesan' => date('Y-m-d'),
+            'total_harga' => $total_harga
         ];
 
         $dataAlamat = [
@@ -66,15 +81,14 @@ class Pesanan extends ResourceController
         $data['nomor_pesanan'] = $nomor_pesanan;
         $data['kode_pesanan'] = $kode_pesanan;
         $data['id_pesanan'] = $id_pesanan;
+        $data['ukuran'] = $ukuran->where('id', $data['order']['id_ukuran'])->get()->getResult()[0]->ukuran;
+        $data['total_harga'] = $total_harga;
 
         $email->setTo($data['dataDiri']['email']);
         $email->setSubject('Konfirmasi Pesanan');
         $email->setMessage(view('email/order-info', $data));
         $dataResponse = [];
 
-        if (!$email->send()) {
-            return $this->respond($dataResponse['isValid'] = false);
-        }
 
         $pembeli->insert($dataPembeli);
         $pembeli->errors() ? null : $this->model->insert($dataPesanan);
@@ -82,6 +96,9 @@ class Pesanan extends ResourceController
 
 
         if (!$this->model->errors() && !$pembeli->errors() && !$alamat->errors()) {
+            if (!$email->send()) {
+                return $this->respond($dataResponse['isValid'] = false);
+            }
             $dataResponse = [
                 'isValid' => true,
             ];
@@ -101,6 +118,6 @@ class Pesanan extends ResourceController
             return $this->respond($dataResponse);
         }
 
-        return $this->respond($dataAlamat);
+        return $this->respond($total_harga);
     }
 }

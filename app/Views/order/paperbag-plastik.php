@@ -8,20 +8,15 @@
 <div class="form-group">
     <label for="nama">Ukuran *</label>
     <select name="ukuran" id="ukuran" class="form-control">
-        <option value="">pilih ukuran</option>
-        <option value="custom">custom</option>
+        <option harga="0" value="">pilih ukuran</option>
     </select>
-</div>
-<div class="form-group" id="ukuranCustomInput" style="display: none;">
-    <label for=" ukuran-custom">Ukuran Custom *</label>
-    <input type="text" name="ukuran-custom" id="ukuran-custom" class="form-control">
 </div>
 <div class="form-group">
     <label for="warna">Warna *</label>
     <input type="text" name="warna" id="warna" class="form-control">
 </div>
 <div class="form-group">
-    <label for="jumlah">Qty / Jumlah *</label>
+    <label for="jumlah">Qty / Jumlah * (minimal order 100pcs)</label>
     <div class="input-group mb-3">
         <input type="number" name="jumlah" id="jumlah" class="form-control">
         <div class="input-group-append">
@@ -62,6 +57,22 @@
 <div class="form-group" id="materi-design-input">
     <label>Materi Design</label>
     <textarea class="form-control" name="materi" id="materi" rows="3" placeholder=""></textarea>
+</div>
+<div class="col-6">
+    <p class="lead">Simulasi Total Harga</p>
+
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <th style="width:50%">Subtotal:</th>
+                <td id="sub-total"></td>
+            </tr>
+            <tr>
+                <th>Total:</th>
+                <td id="total"></td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 <?= $this->endSection() ?>

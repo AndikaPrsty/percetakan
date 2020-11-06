@@ -12,7 +12,7 @@ class Pesanan extends Model
     protected $returnType     = 'array';
     // protected $useSoftDeletes = true;
 
-    protected $allowedFields = ['id', 'id_pembeli', 'id_produk', 'nomor_pesanan', 'kode_pesanan', 'id_ukuran', 'materi', 'status', 'tanggal_pesan', 'keterangan', 'jumlah', 'total_harga'];
+    protected $allowedFields = ['id', 'id_pembeli', 'id_produk', 'nomor_pesanan', 'kode_pesanan', 'id_ukuran', 'materi', 'status', 'tanggal_pesan', 'keterangan', 'jumlah', 'total_harga', 'status_bayar'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
@@ -26,7 +26,8 @@ class Pesanan extends Model
         'nomor_pesanan' => 'required',
         'id_ukuran' => 'required',
         'total_harga' => 'required',
-        'jumlah' => 'required'
+        'jumlah' => 'required',
+        'keterangan' => 'required'
     ];
     protected $validationMessages = [
         'id' => [
@@ -47,6 +48,9 @@ class Pesanan extends Model
         'tanggal_pesan' => [
             'required' => 'Tanggal Pesan Tidak Boleh Kosong'
         ],
+        'keterangan' => [
+            'required' => 'Silahkan isi form dengan benar'
+        ]
     ];
     protected $skipValidation     = false;
 

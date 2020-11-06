@@ -77,7 +77,8 @@ class Pesanan extends ResourceController
             'jumlah' => $data['order']['jumlah'],
             'tanggal_pesan' => date('Y-m-d'),
             'keterangan' => $keterangan,
-            'total_harga' => $total_harga
+            'total_harga' => $total_harga,
+            'status_bayar' => 'belum'
         ];
 
         $dataAlamat = [

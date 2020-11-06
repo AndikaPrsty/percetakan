@@ -53,8 +53,7 @@
                     <hr class="divider my-4" />
                 </div>
                 <div class="col-lg-8 align-self-baseline">
-                    <p class="text-white-75 font-weight-light mb-5">Start Bootstrap can help you build better websites
-                        using the Bootstrap framework! Just download a theme and start customizing, no strings attached!
+                    <p class="text-white-75 font-weight-light mb-5">ajshdaskjdaskjdhaskjdh
                     </p>
                     <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">Terlusuri</a>
                 </div>
@@ -69,7 +68,7 @@
     <!-- Footer-->
     <footer class="bg-light py-5">
         <div class="container">
-            <div class="small text-center text-muted">Copyright © 2020 - Start Bootstrap</div>
+            <div class="small text-center text-muted">Copyright © 2020 Mahasiswa Corona</div>
         </div>
     </footer>
     <!-- Bootstrap core JS-->

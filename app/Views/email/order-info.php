@@ -59,6 +59,7 @@
                                 <th>Produk</th>
                                 <th>ukuran</th>
                                 <th>materi</th>
+                                <th>Keterangan</th>
                                 <th>Jumlah</th>
                                 <th>Total Harga</th>
                             </tr>
@@ -68,6 +69,7 @@
                                 <td><?= $order['nama_produk'] ?></td>
                                 <td><?= $ukuran ?></td>
                                 <td><?= $order['materi'] ?></td>
+                                <td><?= $keterangan ?></td>
                                 <td><?= $order['jumlah'] ?></td>
                                 <td>
                                     <h3>Rp.<?= $total_harga ?></h3>

@@ -57,6 +57,7 @@ class Pesanan extends Model
         $alamat = new  \App\Models\Alamat;
         $produk = new \App\Models\Produk;
         $pembeli = new \App\Models\Pembeli;
+        $log = new \App\Models\LogPesanan;
         $data = [];
 
         if ($id) {
@@ -66,6 +67,7 @@ class Pesanan extends Model
                 $data[$i]['pembeli'] = $pembeli->where('id', $data[$i]['id_pembeli'])->get()->getResultArray();
                 $data[$i]['produk'] = $produk->where('id', $data[$i]['id_produk'])->get()->getResultArray();
                 $data[$i]['alamat'] = $alamat->where('id_pesanan', $data[$i]['id'])->get()->getResultArray();
+                $data[$i]['log'] = $log->where('id_pesanan', $data[$i]['id'])->orderBy('created_at', 'ASC')->get()->getResult();
             }
             return $data;
         } else {

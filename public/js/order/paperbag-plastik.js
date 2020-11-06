@@ -16,11 +16,13 @@ let order = {
         id_produk: null,
         nama_produk: null,
         id_ukuran: null,
-        warna: null,
         jumlah: null,
+        materi: null,
         harga:null,
+    },
+    keterangan:{
+        warna: null,
         sablon_warna: null,
-        materi: null
     }
 }
 let designFile = []
@@ -63,11 +65,11 @@ const setOrderData = () => {
     order.dataDiri.alamat.kodePOS = kodePOS.value
     order.order.nama_produk = document.getElementById('title-nama-produk').innerText
     order.order.id_produk = id_produk
-    order.order.warna = warna.value
+    order.keterangan.warna = warna.value
     order.order.id_ukuran = ukuran.value
     order.order.jumlah = jumlah.value
     order.order.materi = materi.value
-    order.order.sablon_warna = sablon.value
+    order.keterangan.sablon_warna = sablon.value
     order.order.harga = harga
     order.dataDiri.alamat_lengkap = Object.values(order.dataDiri.alamat).join(', ')
 

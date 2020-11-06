@@ -20,13 +20,13 @@
                     <form>
                         <div class="form-group">
                             <label for="">Email</label>
-                            <input type="email" class="form-control">
+                            <input type="email" id="email" class="form-control">
                         </div>
                         <div class="form-group">
                             <label for="">Kode Pesanan</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="kode-pesanan" class="form-control">
                         </div>
-                        <button class="btn btn-success">Submit</button>
+                        <button id="submit" type="button" class="btn btn-success">Submit</button>
                     </form>
                 </div>
             </div>

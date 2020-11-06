@@ -68,17 +68,15 @@
                                                     <th>Jumlah</th>
                                                     <th>Produk</th>
                                                     <th>Ukuran</th>
-                                                    <th>Warna</th>
-                                                    <th>Sablon Warna</th>
+                                                    <th>keterangan</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="tabel-pesanan">
                                                 <tr>
-                                                    <td>120</td>
-                                                    <td>Paperbag</td>
-                                                    <td>455-981-221</td>
-                                                    <td>red</td>
-                                                    <td>blue</td>
+                                                    <td id="jumlah"></td>
+                                                    <td id="nama_produk"></td>
+                                                    <td id="ukuran"></td>
+                                                    <td id="keterangan"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -107,12 +105,8 @@
                                         <div class="table-responsive">
                                             <table class="table">
                                                 <tr>
-                                                    <th style="width:50%">Subtotal:</th>
-                                                    <td>$250.30</td>
-                                                </tr>
-                                                <tr>
                                                     <th>Total:</th>
-                                                    <td>$265.24</td>
+                                                    <td id="total"></td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -125,9 +119,10 @@
                                 <div class="row no-print">
                                     <div class="col-12">
                                         <a href="<?= base_url() ?>/admin" class="btn btn-default">Kembali</a>
-                                        <button type="button" class="btn btn-success float-right">Terima Pesanan
+                                        <button type="button" id="terima" class="btn btn-success float-right">Terima
+                                            Pesanan
                                         </button>
-                                        <button type="button" class="btn btn-danger float-right"
+                                        <button id="tolak" type="button" class="btn btn-danger float-right"
                                             style="margin-right: 5px;">Tolak Pesanan
                                         </button>
                                     </div>
